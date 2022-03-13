@@ -3,6 +3,10 @@ type GameArea = {
   context: CanvasRenderingContext2D
   width: number
   height: number
+  frameNo: number
+  keys: string[]
+  start(): void
+  stop(): void
   handleKeyUp(event: KeyboardEvent): void
   handleKeyDown(event: KeyboardEvent): void
 }
