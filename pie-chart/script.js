@@ -6,20 +6,24 @@ const frameworks = {
   vue: 194000,
   angular: 80200,
   svelte: 56600,
-  preact: 31300
+  preact: 31300,
 }
+
+const colors = ['#f20', '#abbeed', '#199423', '#984', '#009999']
 
 new PieChart({
   canvas: document.getElementById("pie-canvas"),
   data: frameworks,
-  colors: ['#f20', '#abbeed', '#199423', '#984', '#009999']
+  colors,
+  legend: document.getElementById("pie-legend"),
 }).draw()
 
 new DoughnutChart({
   canvas: document.getElementById("doughnut-canvas"),
   data: frameworks,
-  colors: ['#f20', '#abbeed', '#199423', '#984', '#009999'],
-  doughnutHoleSize: 0.5
+  colors,
+  doughnutHoleSize: 0.5,
+  legend: document.getElementById("doughnut-legend"),
 }).draw()
 
 /**
@@ -31,17 +35,22 @@ function PieChart(options) {
   this.ctx = options.canvas.getContext('2d')
   this.data = options.data
   this.colors = options.colors
+  this.legend = options.legend
 
   this.draw = function(offset = 0) {
     const total = Object.values(this.data).reduce((sum, value) => sum + value)
 
     let startAngle = 0,
-        colorIndex = 0
-    Object.values(this.data).forEach((value) => {
+        colorIndex = 0,
+        legendHTML = ""
+
+    for (key in this.data) {
+      const value = this.data[key]
       // Full circle corresponds to an angle of 360 degrees or 2*PI
       const sliceAngle = Math.PI * 2 * value / total
       const pieRadius = Math.min(this.canvas.width / 2, this.canvas.height / 2)
       const endAngle = startAngle + sliceAngle
+      const color = this.colors[colorIndex++ % this.colors.length]
   
       drawPieSlice(
         this.ctx,
@@ -50,7 +59,7 @@ function PieChart(options) {
         pieRadius,
         startAngle,
         endAngle,
-        this.colors[colorIndex++ % this.colors.length]
+        color
       )
 
       let labelX = this.canvas.width / 2 + (offset + pieRadius / 2) * Math.cos(startAngle + sliceAngle / 2)
@@ -65,8 +74,21 @@ function PieChart(options) {
         '#fff'
       )
 
+      if (this.legend) {
+        legendHTML += `
+          <div class="legend__item">
+            <span class="legend__color" style="background-color: ${color}"></span>
+            ${key}
+          </div>
+        `
+      }
+
       startAngle += sliceAngle
-    })
+    }
+
+    if (legendHTML) {
+      this.legend.innerHTML = legendHTML
+    }
   }
 }
 
@@ -102,24 +124,10 @@ function DoughnutChart(options) {
  * @param {number} endX 
  * @param {number} endY 
  */
-function drawLine(ctx, startX, startY, endX, endY) {
+function drawLegend(ctx, startX, startY, endX, endY) {
   ctx.beginPath()
   ctx.moveTo(startX, startY)
   ctx.lineTo(endX, endY)
-  ctx.stroke()
-}
-
-/**
- * @param {CanvasRenderingContext2D} ctx 
- * @param {number} centerX 
- * @param {number} centerY 
- * @param {number} radius 
- * @param {number} startAngle 
- * @param {number} endAngle 
- */
-function drawArc(ctx, centerX, centerY, radius, startAngle, endAngle) {
-  ctx.beginPath()
-  ctx.arc(centerX, centerY, radius, startAngle, endAngle)
   ctx.stroke()
 }
 

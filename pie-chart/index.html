@@ -9,12 +9,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas id="pie-canvas" width="300" height="300">
-    Your browser does not support the canvas element.
-  </canvas>
-  <canvas id="doughnut-canvas" width="300" height="300">
-    Your browser does not support the canvas element.
-  </canvas>
+  <div class="chart">
+    <canvas id="pie-canvas" width="300" height="300">
+      Your browser does not support the canvas element.
+    </canvas>
+    <div id="pie-legend" class="legend"></div>
+  </div>
+
+  <div class="chart">
+    <canvas id="doughnut-canvas" width="300" height="300">
+      Your browser does not support the canvas element.
+    </canvas>
+    <div id="doughnut-legend" class="legend"></div>
+  </div>
 
   <script src="script.js"></script>
 </body>

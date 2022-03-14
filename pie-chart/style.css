@@ -1,3 +1,31 @@
-canvas {
+* {
+  box-sizing: border-box;
+}
+
+.chart {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  grid-gap: 2rem;
   margin: 1rem;
+}
+
+.legend {
+  display: grid;
+  grid-gap: 0.5rem;
+}
+
+.legend__item {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+  grid-gap: 0.5rem;
+  text-transform: capitalize;
+}
+
+.legend__color {
+  width: 15px;
+  height: 15px;
 }

@@ -3,6 +3,7 @@ type PieChartOptions = {
     canvas: HTMLCanvasElement,
     data: { [key in string]: number }
     colors: string[]
+    legend?: HTMLElement
   }): void
 }
 
@@ -12,5 +13,6 @@ type DoughnutChartOptions = {
     data: { [key in string]: number }
     colors: string[]
     doughnutHoleSize: number
+    legend?: HTMLElement
   }): void
 }
