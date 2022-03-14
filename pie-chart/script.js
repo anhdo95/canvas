@@ -1,10 +1,12 @@
-
+/**
+ * Frameworks' star
+ */
 const frameworks = {
-  react: 40,
-  vue: 30,
-  angular: 22,
-  svelte: 5,
-  preact: 3
+  react: 184000,
+  vue: 194000,
+  angular: 80200,
+  svelte: 56600,
+  preact: 31300
 }
 
 new PieChart({
@@ -28,10 +30,9 @@ function PieChart(options) {
 
     let startAngle = 0,
         colorIndex = 0
-    for (key in this.data) {
-      const value = this.data[key]
+    Object.values(this.data).forEach((value) => {
       // Full circle corresponds to an angle of 360 degrees or 2*PI
-      const angle = Math.PI * 2 * value / total
+      const sliceAngle = Math.PI * 2 * value / total
   
       drawPieSlice(
         this.ctx,
@@ -39,13 +40,12 @@ function PieChart(options) {
         this.canvas.height / 2,
         Math.min(this.canvas.width / 2, this.canvas.height / 2),
         startAngle,
-        startAngle + angle,
-        this.colors[colorIndex % this.colors.length]
+        startAngle + sliceAngle,
+        this.colors[colorIndex++ % this.colors.length]
       )
 
-      startAngle += angle
-      colorIndex++
-    }
+      startAngle += sliceAngle
+    })
   }
 }
 
