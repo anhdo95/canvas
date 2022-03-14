@@ -2,13 +2,20 @@
 
 window.onload = startGame
 
-/** @type {Component} */
-let player = getPlayer(), background = getBackground(), gamePiece, gameScore, gameObstacles = []
+let player         = getPlayer(),
+    background     = getBackground(),
+    gameOverSound  = getSound('audios/bounce.mp3'),
+    gameMusicSound = getSound('audios/gametheme.mp3'),
+    gamePiece,
+    gameScore,
+    gameObstacles  = []
 
 function startGame() {
-  gamePiece = new ImageComponent(10, 120, 30, 30, player.smiley)
   gameBackground = new BackgroundComponent(0, 250, 480, 312, 0, 0, 480, 312, background)
+  gamePiece = new ImageComponent(10,
+        120, 30, 30, player.smiley)
   gameScore = new TextComponent(340, 30, '#f50', '18px Arial', 'SCORE: 0')
+  
   gameArea.start()
 }
 
@@ -30,9 +37,14 @@ const gameArea = {
 
     document.addEventListener('keydown', this.handleKeyDown.bind(this))
     document.addEventListener('keyup', this.handleKeyUp.bind(this))
+    document.addEventListener('keydown', function handler() {
+      gameMusicSound.play()
+      document.removeEventListener('keydown', handler)
+    })
   },
   stop() {
     clearInterval(this.interval)
+    gameMusicSound.pause()
   },
   clear() {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
@@ -63,7 +75,9 @@ const gameArea = {
 function updateGameArea() {
   for (let i = 0; i < gameObstacles.length; i++) {
     if (gamePiece.crashWith(gameObstacles[i])) {
-      return void gameArea.stop()
+      gameArea.stop()
+      gameOverSound.play()
+      return
     }
   }
 
@@ -204,6 +218,27 @@ function BackgroundComponent(sx, sy, sw, sh, x, y, width, height, image) {
     }
   }
   return component
+}
+
+function getSound(src) {
+  const audio = document.createElement('audio')
+  audio.src = src
+  audio.setAttribute('preload', 'auto')
+  audio.setAttribute('controls', 'none')
+  audio.setAttribute('muted', true)
+  audio.style.display = 'none'
+
+  document.body.appendChild(audio)
+
+  return {
+    play() {
+      audio.setAttribute('muted', false)
+      audio.play()
+    },
+    pause() {
+      audio.pause()
+    }
+  }
 }
 
 function getPlayer() {
