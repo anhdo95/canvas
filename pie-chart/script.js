@@ -10,9 +10,16 @@ const frameworks = {
 }
 
 new PieChart({
-  canvas: document.getElementById("canvas"),
+  canvas: document.getElementById("pie-canvas"),
   data: frameworks,
   colors: ['#f20', '#abbeed', '#199423', '#984', '#009999']
+}).draw()
+
+new DoughnutChart({
+  canvas: document.getElementById("doughnut-canvas"),
+  data: frameworks,
+  colors: ['#f20', '#abbeed', '#199423', '#984', '#009999'],
+  doughnutHoleSize: 0.5
 }).draw()
 
 /**
@@ -49,6 +56,28 @@ function PieChart(options) {
   }
 }
 
+/**
+ * @constructor
+ * @param {DoughnutChartOptions} options 
+ */
+function DoughnutChart(options) {
+  this.doughnutHoleSize = options.doughnutHoleSize
+  this.base = new PieChart(options)
+
+  this.draw = function() {
+    this.base.draw()
+
+    drawPieSlice(
+      this.base.ctx,
+      this.base.canvas.width / 2,
+      this.base.canvas.height / 2,
+      this.doughnutHoleSize * Math.min(this.base.canvas.width / 2, this.base.canvas.height / 2),
+      0,
+      2 * Math.PI,
+      '#fff'
+    )
+  }
+}
 
 /**
  * @param {CanvasRenderingContext2D} ctx 
